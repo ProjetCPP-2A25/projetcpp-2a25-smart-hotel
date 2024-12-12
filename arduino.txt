@@ -1,0 +1,36 @@
+const int brocheCapteurFumee = A0; // Capteur de fumée connecté à la broche analogique A0
+const int brocheBuzzer = 4; // Buzzer connecté à la broche numérique D3
+const int brocheLampe = 3; // Lampe connectée à la broche numérique D4
+const int seuilDetection = 200; // Nouveau seuil de détection de fumée
+
+void setup() {
+  pinMode(brocheCapteurFumee, INPUT);  // Configure la broche du capteur en entrée
+  pinMode(brocheBuzzer, OUTPUT);       // Configure la broche du buzzer en sortie
+  pinMode(brocheLampe, OUTPUT);        // Configure la broche de la lampe en sortie
+  Serial.begin(9600);                  // Initialisation de la communication série
+}
+
+void loop() {
+  int valeurFumee = analogRead(brocheCapteurFumee); // Lecture de la valeur analogique du capteur
+  Serial.print("Valeur de fumée : "); 
+  Serial.println(valeurFumee); 
+
+  if (valeurFumee > seuilDetection) { // Si la valeur dépasse le seuil
+    digitalWrite(brocheBuzzer, HIGH); // Activer le buzzer
+    clignoterLampe();                 // Faire clignoter la lampe
+  } else { 
+    digitalWrite(brocheBuzzer, LOW);  // Désactiver le buzzer
+    digitalWrite(brocheLampe, LOW);   // Éteindre la lampe
+  }
+
+  delay(500); // Pause avant la prochaine lecture
+}
+
+void clignoterLampe() {
+  for (int i = 0; i < 5; i++) { // Faire clignoter la lampe 5 fois
+    digitalWrite(brocheLampe, HIGH); // Allumer la lampe
+    delay(200);                      // Attendre 200ms
+    digitalWrite(brocheLampe, LOW);  // Éteindre la lampe
+    delay(200);                      // Attendre 200ms
+  }
+}
